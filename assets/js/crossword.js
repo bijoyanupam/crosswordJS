@@ -19,6 +19,8 @@
         'map': []
     };
 
+    var $puzzleParent = $('.' + Crossword.mainClass);
+
     /**
      * Initializes rendering of crossword puzzle based on given configuration.
      *
@@ -32,13 +34,55 @@
         renderPuzzle();
 
         // Reset the height of puzzle on resize.
-        // TODO: This can also be a throttling call.
-        $(win).on('resize', this.resetPuzzleHeight);
+        // TODO: This can be a throttling call.
+        $(win).on('resize', this.resizePuzzle);
+
+        addBehaviouralEvents();
 
         // Hide crossword loader.
         $('.' + this.loaderClass).css({
             'display': 'none'
         });
+    };
+
+    /**
+     * Add behavioural evenets for better user experience.
+     * TODO: To add more keyword/intuitive user experience.
+     *
+     * @private
+     *
+     * @return void
+     */
+    var addBehaviouralEvents = function () {
+        $puzzleParent.on('focus', 'input', highlightPuzzleInput);
+        $puzzleParent.on('blur', 'input', resetPuzzleInput);
+    };
+
+    /**
+     * Reset input puzzle feild.
+     *
+     * @private
+     *
+     * @return void
+     */
+    var resetPuzzleInput = function () {
+        $puzzleParent.find('input').removeClass('select');
+    };
+
+    /**
+     * Highlight input puzzle feild.
+     *
+     * @private
+     *
+     * @return void
+     */
+    var highlightPuzzleInput = function (e) {
+        var focusedPuzzleCount = Math.max.apply(null, $(e.target).closest('.puzzle-cell').data('puzzle'));
+
+        resetPuzzleInput();
+        $puzzleParent
+            .find('.puzzle-' + focusedPuzzleCount + ' input')
+            .addClass('select');
     };
 
     /**
@@ -102,8 +146,9 @@
     var renderPuzzle = function () {
         var i,
             j,
-            $puzzleParent = $('.' + Crossword.mainClass),
             puzzleCellClass = '',
+            puzzleNumberClass,
+            puzzleNumber,
             puzzleCount = 0;
 
         $('<div>').appendTo($puzzleParent).addClass('crossword-puzzle');
@@ -112,6 +157,12 @@
                 .addClass('puzzle-row puzzle-row-' + (i + 1));
             for (j = 0; j < Crossword.map[i].length; j++) {
                 puzzleCellClass = 'puzzle-input';
+                puzzleNumberClass = [];
+                puzzleNumber = [];
+                Crossword.map[i][j].forEach(function (element) {
+                    puzzleNumberClass.push('puzzle-' + element);
+                    puzzleNumber.push(element);
+                });
                 if (Crossword.map[i][j].length === 0) {
                     puzzleCellClass = 'puzzle-none';
                 }
@@ -119,13 +170,16 @@
                 // Append puzzle cell.
                 $('<div>').appendTo($puzzleParent.find('.puzzle-row-' + (i + 1)))
                     .addClass('puzzle-cell')
+                    .addClass(puzzleNumberClass.join(' '))
                     .addClass('puzzle-cell-' + (j + 1) + (i + 1))
                     .addClass(puzzleCellClass)
+                    .data('puzzle', puzzleNumber)
                     .css({
                         'width': (100 / Crossword.config.sizeX) + '%'
                     });
 
                 // Append puzzle number in cell.
+                // Instead of Math function, we could also use Array.reduce.
                 if ((Crossword.map[i][j].length > 0) &&
                     (puzzleCount < Math.max.apply(null, Crossword.map[i][j]))) {
                     $puzzleParent.find('.puzzle-cell-' + (j + 1) + (i + 1)).append('<span>' + (puzzleCount + 1) + '</span>');
@@ -133,7 +187,7 @@
                 }
             }
         }
-        Crossword.resetPuzzleHeight();
+        Crossword.resizePuzzle();
         renderPuzzleInput();
     };
 
@@ -145,21 +199,22 @@
      * @return void
      */
     var renderPuzzleInput = function () {
-        var $puzzleParent = $('.' + Crossword.mainClass),
-            $puzzleCellInput = $('<input maxlength="1" val="" type="text" />');
+        var $puzzleCellInput = $('<input maxlength="1" val="" type="text" />');
 
         $puzzleParent.find('.puzzle-input').append($puzzleCellInput);
     };
 
     /**
-     * Reset the crossword puzzle cell height for responsive views.
+     * Resize the crossword puzzle dimensions for responsive views.
      *
      * @return void
      */
-    Crossword.resetPuzzleHeight = function () {
-        var $puzzleParent = $('.' + Crossword.mainClass);
-
-        $puzzleParent.find('.puzzle-cell').height($puzzleParent.find('.puzzle-cell').width());
+    Crossword.resizePuzzle = function () {
+        $puzzleParent.find('.puzzle-cell')
+            .css({
+                'height': $puzzleParent.find('.puzzle-cell').width(),
+                'fontSize': ($puzzleParent.find('.puzzle-cell').width() / 3)
+            })
     };
 
     /**
