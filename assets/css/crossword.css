@@ -1,10 +1,98 @@
 /**
  * Crossword puzzle game styles.
+ *
+ * TODO: This can be SASS file.
  */
 
 .loader {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    position: fixed;
+    display: block;
+}
+
+.loader-message {
     left: 50%;
     top: 50%;
     position: fixed;
     transform: translate(-50%, -50%);
+}
+
+.crossword {
+    box-sizing: border-box;
+    float: left;
+    width: 52%;
+    padding: 12px 3% 0 12px;
+    overflow: auto;
+}
+
+.crossword-puzzle {
+    display: table;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.puzzle-row {
+    display: table-row;
+}
+
+.puzzle-cell {
+    border: 1px solid black;
+    display: table-cell;
+}
+
+.puzzle-none {
+    background-color: black;
+}
+
+.puzzle-input {
+    position: relative;
+}
+
+.puzzle-input input {
+    background-color: transparent;
+    border: none;
+    color: black;
+    height: 100%;
+    padding: 0;
+    text-align: center;
+    width: 100%;
+}
+
+.puzzle-input span {
+    font-size: 0.8em;
+    left: 1px;
+    position: absolute;
+    top: -1px;
+}
+
+.crossword-clues {
+    box-sizing: border-box;
+    float: left;
+    padding: 12px 12px 0 0;
+    width: 48%;
+}
+
+.crossword-clues h2 {
+    text-transform: capitalize;
+}
+
+.crossword-clues h2:first-child {
+    margin-top: 0;
+}
+
+.crossword-clues ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+@media (max-width: 961px) {
+    .crossword,
+    .crossword-clues {
+        width: 100%;
+        float: none;
+        padding: 12px;
+    }
 }
