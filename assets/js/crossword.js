@@ -1,7 +1,7 @@
 /**
  * Crossword puzzle game JS plugin.
  *
- * @version 0.0.1
+ * @version 1.0.0
  */
 
 /* global jQuery */
