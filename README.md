@@ -7,7 +7,7 @@ Requires jQuery (latest version). You can get latest version of jQuery from http
 ## Configuration
 Basic format of configuration as shown below:
 
-### Configuration Data:
+### Configuration data object:
 ```javascript
 {
     "sizeX": 9, // Number of horizontal cells in the crossword
@@ -56,6 +56,11 @@ Basic format of configuration as shown below:
 <div class="loader">
     <div class="loader-message">Loading...</div>
 </div>
+```
+
+### Initialize
+```javascript
+Crossword.init(CONFIGURATION_DATA_OBJECT);
 ```
 
 ## Support
