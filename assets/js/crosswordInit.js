@@ -71,7 +71,7 @@ var crosswordConfig = {
             "y": 9,
             "desc": "Odd, seeker, buming",
             "length": 9
-        },
+        }
     ],
     "down": [ // Array containing 'down' questions
         {
